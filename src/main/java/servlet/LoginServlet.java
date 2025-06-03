@@ -78,17 +78,9 @@ public class LoginServlet extends HttpServlet {
         }
 
         if (medico != null && BCrypt.checkpw(clave, medico.getPassMedi())) {
-            // Validación 2FA automática usando logiMedi como "secret"
-            GoogleAuthenticator gAuth = new GoogleAuthenticator();
-            boolean isCodeValid = gAuth.authorize(medico.getLogiMedi(), gAuth.getTotpPassword(medico.getLogiMedi()));
-
-            if (isCodeValid) {
-                HttpSession session = request.getSession();
-                session.setAttribute("usuario", medico);
-                response.getWriter().write("ok");
-            } else {
-                response.getWriter().write("Error en la verificación del segundo factor (2FA)");
-            }
+            HttpSession session = request.getSession();
+            session.setAttribute("usuario", medico);
+            response.getWriter().write("ok");
         } else {
             response.getWriter().write("Credenciales incorrectas");
         }
